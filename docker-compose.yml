@@ -85,13 +85,11 @@ services:
       S3_ENDPOINT: http://minio:9000
       KAFKA_BOOTSTRAP_SERVERS: kafka:9094
 
-      # 1. ADD THIS: Tell Spark to load all JARs inside the mounted folder
-      SPARK_CONF_DIR: /app
-      SPARK_EXTRA_CLASSPATH: "/usr/local/spark/jars-extra/*"
+      # thsi tells Spark to load all JARs inside the mounted folder
+      SPARK_CONF_DIR: /app/jars
 
     volumes:
       - ./:/app
-      # 2. ADD THIS: Mount your local ./jars folder into the container
       - ./jars:/usr/local/spark/jars-extra:ro
 
     depends_on:
@@ -100,7 +98,6 @@ services:
       - kafka
     networks:
       - lakehouse_net
-
 
 # Persist data across container restarts
 volumes:

@@ -7,7 +7,6 @@ from pyspark.sql.types import (
     StructType,
 )
 
-# Spark automatically reads spark-defaults.conf!
 spark = (
     SparkSession.builder.master("local[*]").appName("Transactions").getOrCreate()
 )
