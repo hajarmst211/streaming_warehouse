@@ -5,6 +5,8 @@ import time
 from dotenv import load_dotenv
 from faker import Faker
 from kafka import KafkaProducer
+from datetime import datetime, timezone
+import random
 
 load_dotenv()
 kafka_port = os.getenv("KAFKA_PORT", "9092")
@@ -13,18 +15,22 @@ fake = Faker()
 
 
 def generate_transaction():
+    is_fraudulent = random.random() < 0.05
+
+    if is_fraudulent:
+        amount = round(fake.pyfloat(min_value=10001.0, max_value=50000.0, right_digits=2), 2)
+    else:
+        amount = round(fake.pyfloat(min_value=1.0, max_value=1000.0, right_digits=2), 2)
+
     return {
         "transaction_id": f"tx_{fake.random_int(min=10000, max=99999)}",
         "user_id": f"usr_{fake.random_int(min=100, max=999)}",
-        "amount": round(
-            fake.pyfloat(min_value=1.0, max_value=1000.0, right_digits=2), 2
-        ),
+        "amount": amount,
         "currency": fake.currency_code(),
         "merchant": fake.company(),
-        "timestamp": fake.date_time().strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "location": fake.country_code(),
     }
-
 
 def send_messages(count=10):
     producer = KafkaProducer(

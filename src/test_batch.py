@@ -5,6 +5,7 @@ from pyspark.sql.types import (
     StringType,
     StructField,
     StructType,
+    TimestampType
 )
 
 spark = (
@@ -16,12 +17,20 @@ spark.sql("CREATE NAMESPACE IF NOT EXISTS demo.finance")
 
 schema = StructType(
     [
-        StructField("sender_id", LongType(), True),
-        StructField("reciever_id", LongType(), True),
+        StructField("transaction_id", StringType(), False),
+        StructField("user_id", StringType(), True),
         StructField("amount", DoubleType(), True),
-        StructField("transaction_type", StringType(), True),
+        StructField("currency", StringType(), True),
+        StructField("merchant", StringType(), True),
+        StructField("timestamp", TimestampType(), True),
+        StructField("location", StringType(), True),
     ]
 )
 
 df = spark.createDataFrame([], schema)
+'''
+demo: name of the MinIOn catalog connection in Spark
+finance: Namespace/Database- a logical folder to organize related tables
+transactions: the actual Iceberg table/dataset created
+'''
 df.writeTo("demo.finance.transactions").createOrReplace()
