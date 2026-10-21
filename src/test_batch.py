@@ -12,7 +12,7 @@ spark = (
 )
 
 # Now your original code just works
-spark.sql("CREATE NAMESPACE IF NOT EXISTS demo.warehouse")
+spark.sql("CREATE NAMESPACE IF NOT EXISTS demo.finance")
 
 schema = StructType(
     [
@@ -24,4 +24,4 @@ schema = StructType(
 )
 
 df = spark.createDataFrame([], schema)
-df.writeTo("demo.warehouse.transactions").create()
+df.writeTo("demo.finance.transactions").createOrReplace()

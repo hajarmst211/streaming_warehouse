@@ -68,7 +68,7 @@ services:
 
 # PySpark with JupyterLab
   pyspark:
-    image: quay.io/jupyter/pyspark-notebook:latest
+    image: quay.io/jupyter/pyspark-notebook:spark-3.5.0
     container_name: pyspark
     ports:
       - "${PYSPARK_PORT:-8888}:8888" # JupyterLab UI
@@ -86,7 +86,7 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9094
 
       # thsi tells Spark to load all JARs inside the mounted folder
-      SPARK_CONF_DIR: /app/jars
+      SPARK_CONF_DIR: /app/src
 
     volumes:
       - ./:/app
